@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "The document declares that this endpoint requires authentication, with one of:"
+    },
     "owner_bundle": null,
     "policy": "authenticated",
     "required_role": null
@@ -22,13 +26,14 @@
     "auth_surface": true,
     "criticality": "medium",
     "external_side_effects": false,
-    "risk_score": 55,
+    "risk_score": 45,
     "sensitivity": "pii",
     "write_operation": true
   },
+  "seed_cases": null,
   "semantic_properties": [
     {
-      "description": "After a successful unfollow, the returned profile is not followed by the caller.",
+      "description": "A successful response reports that the caller is not following the profile.",
       "expression": {
         "kind": "binary_op",
         "left": {
@@ -41,7 +46,11 @@
           "value": false
         }
       },
-      "id": "profile-not-followed",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\terr := db.Where(\"following_id = ? AND followed_by_id = ?\", v.ID, u.ID).Delete(&FollowModel{}).Error"
+      },
+      "id": "profile-not-following",
       "property_class": "response_invariant"
     }
   ],

@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "\"requirement\": \"required\""
+    },
     "owner_bundle": null,
     "policy": "authenticated",
     "required_role": null
@@ -11,6 +15,7 @@
     "enum": null,
     "examples": null,
     "format": null,
+    "grounds": null,
     "items": null,
     "maxItems": null,
     "maxLength": null,
@@ -26,6 +31,7 @@
         "enum": null,
         "examples": null,
         "format": null,
+        "grounds": null,
         "items": null,
         "maxItems": null,
         "maxLength": null,
@@ -41,6 +47,12 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Bio      string `form:\"bio\" json:\"bio\" binding:\"max=1024\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 1024,
@@ -51,7 +63,7 @@
             "pattern": null,
             "properties": null,
             "required": null,
-            "type": null
+            "type": "string"
           },
           "email": {
             "default": null,
@@ -59,6 +71,16 @@
             "enum": null,
             "examples": null,
             "format": "email",
+            "grounds": {
+              "format": {
+                "basis": "stated",
+                "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": null,
@@ -77,6 +99,12 @@
             "enum": null,
             "examples": null,
             "format": "uri",
+            "grounds": {
+              "format": {
+                "basis": "stated",
+                "quote": "Image    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": null,
@@ -87,7 +115,7 @@
             "pattern": null,
             "properties": null,
             "required": null,
-            "type": null
+            "type": "string"
           },
           "password": {
             "default": null,
@@ -95,6 +123,16 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 255,
@@ -113,6 +151,16 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 255,
@@ -130,7 +178,7 @@
         "type": "object"
       }
     },
-    "required": [],
+    "required": null,
     "type": "object"
   },
   "method": "put",
@@ -153,6 +201,164 @@
     "sensitivity": "auth",
     "write_operation": true
   },
+  "seed_cases": [
+    {
+      "description": "Username one character below the minimum.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+      },
+      "id": "username-below-minimum",
+      "values": {
+        "user.username": "abc"
+      }
+    },
+    {
+      "description": "Username at the minimum length.",
+      "expects": null,
+      "grounds": null,
+      "id": "username-at-minimum",
+      "values": {
+        "user.username": "abcd"
+      }
+    },
+    {
+      "description": "Username one character above the minimum.",
+      "expects": null,
+      "grounds": null,
+      "id": "username-above-minimum",
+      "values": {
+        "user.username": "abcde"
+      }
+    },
+    {
+      "description": "Explicitly set an empty password.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+      },
+      "id": "empty-password",
+      "values": {
+        "user.password": ""
+      }
+    },
+    {
+      "description": "Password one character below the minimum.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+      },
+      "id": "password-below-minimum",
+      "values": {
+        "user.password": "abcdefg"
+      }
+    },
+    {
+      "description": "Password at the minimum length.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-at-minimum",
+      "values": {
+        "user.password": "abcdefgh"
+      }
+    },
+    {
+      "description": "Password one character above the minimum.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-above-minimum",
+      "values": {
+        "user.password": "abcdefghi"
+      }
+    },
+    {
+      "description": "Password at bcrypt's 72-byte input limit.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-at-bcrypt-limit",
+      "values": {
+        "user.password": "abcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefgh"
+      }
+    },
+    {
+      "description": "Password beyond bcrypt's input limit, whose hashing error is ignored.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-over-bcrypt-limit",
+      "values": {
+        "user.password": "abcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghx"
+      }
+    },
+    {
+      "description": "Email that fails the declared email validator.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+      },
+      "id": "invalid-email",
+      "values": {
+        "user.email": "not-an-email"
+      }
+    },
+    {
+      "description": "Explicitly set an empty email.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+      },
+      "id": "empty-email",
+      "values": {
+        "user.email": ""
+      }
+    },
+    {
+      "description": "Image value that is not a URL.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Image    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
+      },
+      "id": "invalid-image-url",
+      "values": {
+        "user.image": "not-a-url"
+      }
+    },
+    {
+      "description": "Attempt to clear the image with an empty string.",
+      "expects": null,
+      "grounds": null,
+      "id": "empty-image",
+      "values": {
+        "user.image": ""
+      }
+    },
+    {
+      "description": "Attempt to clear the bio with an empty string.",
+      "expects": null,
+      "grounds": null,
+      "id": "empty-bio",
+      "values": {
+        "user.bio": ""
+      }
+    },
+    {
+      "description": "Send an update with no user fields despite the at-least-one-field requirement.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\"description\": \"User details to update. At least **one** field is required.\","
+      },
+      "id": "empty-update",
+      "values": {
+        "user": {}
+      }
+    }
+  ],
   "semantic_properties": null,
   "transitions": null
 }

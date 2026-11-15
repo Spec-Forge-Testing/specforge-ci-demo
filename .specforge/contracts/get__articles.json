@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "\"description\": \"Get most recent articles globally. Use query parameters to filter results. Auth is optional\","
+    },
     "owner_bundle": null,
     "policy": "public",
     "required_role": null
@@ -11,12 +15,59 @@
     "header": {},
     "path": {},
     "query": {
-      "limit": {
-        "default": 20,
+      "author": {
+        "default": null,
         "description": null,
         "enum": null,
-        "examples": null,
+        "examples": [
+          ""
+        ],
         "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      },
+      "favorited": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": [
+          ""
+        ],
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      },
+      "limit": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": [
+          1,
+          2,
+          20
+        ],
+        "format": null,
+        "grounds": null,
         "items": null,
         "maxItems": null,
         "maxLength": null,
@@ -33,8 +84,12 @@
         "default": 0,
         "description": null,
         "enum": null,
-        "examples": null,
+        "examples": [
+          0,
+          1
+        ],
         "format": null,
+        "grounds": null,
         "items": null,
         "maxItems": null,
         "maxLength": null,
@@ -46,6 +101,27 @@
         "properties": null,
         "required": null,
         "type": "integer"
+      },
+      "tag": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": [
+          ""
+        ],
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
       }
     }
   },
@@ -59,10 +135,113 @@
     "auth_surface": false,
     "criticality": "medium",
     "external_side_effects": false,
-    "risk_score": 45,
-    "sensitivity": "pii",
+    "risk_score": 40,
+    "sensitivity": "public",
     "write_operation": true
   },
+  "seed_cases": [
+    {
+      "description": "Zero items at the lower limit boundary",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\"minimum\": 1,"
+      },
+      "id": "limit-below-minimum",
+      "values": {
+        "limit": 0
+      }
+    },
+    {
+      "description": "Negative item limit",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\"minimum\": 1,"
+      },
+      "id": "limit-negative",
+      "values": {
+        "limit": -1
+      }
+    },
+    {
+      "description": "Smallest permitted item limit",
+      "expects": null,
+      "grounds": null,
+      "id": "limit-at-minimum",
+      "values": {
+        "limit": 1
+      }
+    },
+    {
+      "description": "Item limit immediately above the minimum",
+      "expects": null,
+      "grounds": null,
+      "id": "limit-above-minimum",
+      "values": {
+        "limit": 2
+      }
+    },
+    {
+      "description": "Negative result offset",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\"minimum\": 0,"
+      },
+      "id": "offset-below-minimum",
+      "values": {
+        "offset": -1
+      }
+    },
+    {
+      "description": "Start at the first result",
+      "expects": null,
+      "grounds": null,
+      "id": "offset-at-minimum",
+      "values": {
+        "offset": 0
+      }
+    },
+    {
+      "description": "Skip the first result",
+      "expects": null,
+      "grounds": null,
+      "id": "offset-above-minimum",
+      "values": {
+        "offset": 1
+      }
+    },
+    {
+      "description": "Limit too large for Go integer conversion",
+      "expects": null,
+      "grounds": null,
+      "id": "limit-integer-overflow",
+      "values": {
+        "limit": 9223372036854775808
+      }
+    },
+    {
+      "description": "Offset too large for Go integer conversion",
+      "expects": null,
+      "grounds": null,
+      "id": "offset-integer-overflow",
+      "values": {
+        "offset": 9223372036854775808
+      }
+    },
+    {
+      "description": "Explicit empty filters select the unfiltered branch",
+      "expects": null,
+      "grounds": null,
+      "id": "empty-filters",
+      "values": {
+        "author": "",
+        "favorited": "",
+        "tag": ""
+      }
+    }
+  ],
   "semantic_properties": null,
   "transitions": null
 }

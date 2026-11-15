@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "  \"description\": \"Create a comment for an article. Auth is required\","
+    },
     "owner_bundle": null,
     "policy": "authenticated",
     "required_role": null
@@ -11,6 +15,7 @@
     "enum": null,
     "examples": null,
     "format": null,
+    "grounds": null,
     "items": null,
     "maxItems": null,
     "maxLength": null,
@@ -26,6 +31,7 @@
         "enum": null,
         "examples": null,
         "format": null,
+        "grounds": null,
         "items": null,
         "maxItems": null,
         "maxLength": null,
@@ -39,8 +45,20 @@
             "default": null,
             "description": null,
             "enum": null,
-            "examples": null,
+            "examples": [
+              "a"
+            ],
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "\t\tBody string `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "\t\tBody string `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 2048,
@@ -54,15 +72,11 @@
             "type": "string"
           }
         },
-        "required": [
-          "body"
-        ],
+        "required": null,
         "type": "object"
       }
     },
-    "required": [
-      "comment"
-    ],
+    "required": null,
     "type": "object"
   },
   "method": "post",
@@ -85,6 +99,53 @@
     "sensitivity": "pii",
     "write_operation": true
   },
+  "seed_cases": [
+    {
+      "description": "Reject an empty comment body.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\t\tBody string `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+      },
+      "id": "empty-body",
+      "values": {
+        "comment.body": ""
+      }
+    },
+    {
+      "description": "Accept a comment at the minimum length.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\t\tBody string `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+      },
+      "id": "one-character-body",
+      "values": {
+        "comment.body": "a"
+      }
+    },
+    {
+      "description": "Accept a comment just above the minimum length.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\t\tBody string `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+      },
+      "id": "two-character-body",
+      "values": {
+        "comment.body": "ab"
+      }
+    },
+    {
+      "description": "Exercise required validation on a nonempty whitespace-only comment.",
+      "expects": null,
+      "grounds": null,
+      "id": "whitespace-body",
+      "values": {
+        "comment.body": " "
+      }
+    }
+  ],
   "semantic_properties": null,
   "transitions": null
 }

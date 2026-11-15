@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "  \"description\": \"Get an article. Auth not required\","
+    },
     "owner_bundle": null,
     "policy": "public",
     "required_role": null
@@ -22,10 +26,46 @@
     "auth_surface": false,
     "criticality": "medium",
     "external_side_effects": false,
-    "risk_score": 35,
-    "sensitivity": "public",
+    "risk_score": 45,
+    "sensitivity": "pii",
     "write_operation": true
   },
-  "semantic_properties": null,
+  "seed_cases": null,
+  "semantic_properties": [
+    {
+      "description": "The creation timestamp is serialized in UTC with at most three fractional digits.",
+      "expression": {
+        "kind": "matches",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,3})?Z$",
+        "value": {
+          "field": "article.createdAt",
+          "kind": "field_ref"
+        }
+      },
+      "grounds": {
+        "basis": "stated",
+        "quote": "\t\tCreatedAt:   s.CreatedAt.UTC().Format(\"2006-01-02T15:04:05.999Z\"),"
+      },
+      "id": "created-at-utc-format",
+      "property_class": "response_invariant"
+    },
+    {
+      "description": "The update timestamp is serialized in UTC with at most three fractional digits.",
+      "expression": {
+        "kind": "matches",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,3})?Z$",
+        "value": {
+          "field": "article.updatedAt",
+          "kind": "field_ref"
+        }
+      },
+      "grounds": {
+        "basis": "stated",
+        "quote": "\t\tUpdatedAt:      s.UpdatedAt.UTC().Format(\"2006-01-02T15:04:05.999Z\"),"
+      },
+      "id": "updated-at-utc-format",
+      "property_class": "response_invariant"
+    }
+  ],
   "transitions": null
 }

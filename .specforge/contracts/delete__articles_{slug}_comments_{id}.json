@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "\t\tif commentModel.AuthorID != articleUserModel.ID {"
+    },
     "owner_bundle": "articles_comments_id",
     "policy": "owner_only",
     "required_role": null
@@ -16,6 +20,16 @@
         "enum": null,
         "examples": null,
         "format": null,
+        "grounds": {
+          "maximum": {
+            "basis": "stated",
+            "quote": "\tid64, err := strconv.ParseUint(c.Param(\"id\"), 10, 32)"
+          },
+          "minimum": {
+            "basis": "stated",
+            "quote": "\tid64, err := strconv.ParseUint(c.Param(\"id\"), 10, 32)"
+          }
+        },
         "items": null,
         "maxItems": null,
         "maxLength": null,
@@ -44,9 +58,10 @@
     "criticality": "high",
     "external_side_effects": false,
     "risk_score": 75,
-    "sensitivity": "auth",
+    "sensitivity": "internal",
     "write_operation": true
   },
+  "seed_cases": null,
   "semantic_properties": null,
   "transitions": null
 }

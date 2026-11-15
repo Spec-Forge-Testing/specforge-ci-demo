@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "c.JSON(http.StatusForbidden, common.NewError(\"article\", errors.New(\"you are not the author\")))"
+    },
     "owner_bundle": "articles_slug",
     "policy": "owner_only",
     "required_role": null
@@ -11,6 +15,7 @@
     "enum": null,
     "examples": null,
     "format": null,
+    "grounds": null,
     "items": null,
     "maxItems": null,
     "maxLength": null,
@@ -26,6 +31,7 @@
         "enum": null,
         "examples": null,
         "format": null,
+        "grounds": null,
         "items": null,
         "maxItems": null,
         "maxLength": null,
@@ -41,6 +47,16 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Body        string   `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Body        string   `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 2048,
@@ -59,6 +75,16 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Description string   `form:\"description\" json:\"description\" binding:\"required,max=2048\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Description string   `form:\"description\" json:\"description\" binding:\"required,max=2048\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 2048,
@@ -75,8 +101,16 @@
             "default": null,
             "description": null,
             "enum": null,
-            "examples": null,
+            "examples": [
+              "Test"
+            ],
             "format": null,
+            "grounds": {
+              "minLength": {
+                "basis": "stated",
+                "quote": "Title       string   `form:\"title\" json:\"title\" binding:\"required,min=4\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": null,
@@ -94,7 +128,7 @@
         "type": "object"
       }
     },
-    "required": [],
+    "required": null,
     "type": "object"
   },
   "method": "put",
@@ -113,10 +147,141 @@
     "auth_surface": true,
     "criticality": "high",
     "external_side_effects": false,
-    "risk_score": 65,
+    "risk_score": 70,
     "sensitivity": "internal",
     "write_operation": true
   },
+  "seed_cases": [
+    {
+      "description": "Title one character below the minimum length.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Title       string   `form:\"title\" json:\"title\" binding:\"required,min=4\"`"
+      },
+      "id": "title-below-minimum",
+      "values": {
+        "article.title": "abc"
+      }
+    },
+    {
+      "description": "Title at the minimum length.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Title       string   `form:\"title\" json:\"title\" binding:\"required,min=4\"`"
+      },
+      "id": "title-at-minimum",
+      "values": {
+        "article.title": "Test"
+      }
+    },
+    {
+      "description": "Title one character above the minimum length.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Title       string   `form:\"title\" json:\"title\" binding:\"required,min=4\"`"
+      },
+      "id": "title-above-minimum",
+      "values": {
+        "article.title": "Tests"
+      }
+    },
+    {
+      "description": "Valid-length title that may produce an empty slug.",
+      "expects": null,
+      "grounds": null,
+      "id": "title-without-slug-characters",
+      "values": {
+        "article.title": "!!!!"
+      }
+    },
+    {
+      "description": "Explicitly clear the required description.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Description string   `form:\"description\" json:\"description\" binding:\"required,max=2048\"`"
+      },
+      "id": "empty-description",
+      "values": {
+        "article.description": ""
+      }
+    },
+    {
+      "description": "Description at its minimum length.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Description string   `form:\"description\" json:\"description\" binding:\"required,max=2048\"`"
+      },
+      "id": "one-character-description",
+      "values": {
+        "article.description": "a"
+      }
+    },
+    {
+      "description": "Explicitly clear the required article body.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Body        string   `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+      },
+      "id": "empty-body",
+      "values": {
+        "article.body": ""
+      }
+    },
+    {
+      "description": "Article body at its minimum length.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Body        string   `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+      },
+      "id": "one-character-body",
+      "values": {
+        "article.body": "a"
+      }
+    },
+    {
+      "description": "Set the tag list to empty.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "if len(tags) == 0 {"
+      },
+      "id": "clear-tags",
+      "values": {
+        "article.tagList": []
+      }
+    },
+    {
+      "description": "Supply the same tag twice.",
+      "expects": null,
+      "grounds": null,
+      "id": "duplicate-tags",
+      "values": {
+        "article.tagList": [
+          "testing",
+          "testing"
+        ]
+      }
+    },
+    {
+      "description": "Supply tags in reverse alphabetical order.",
+      "expects": null,
+      "grounds": null,
+      "id": "multiple-tags",
+      "values": {
+        "article.tagList": [
+          "testing",
+          "articles"
+        ]
+      }
+    }
+  ],
   "semantic_properties": null,
   "transitions": null
 }

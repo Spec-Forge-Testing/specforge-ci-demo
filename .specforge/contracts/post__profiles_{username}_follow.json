@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "\"requirement\": \"required\""
+    },
     "owner_bundle": null,
     "policy": "authenticated",
     "required_role": null
@@ -26,6 +30,29 @@
     "sensitivity": "pii",
     "write_operation": true
   },
-  "semantic_properties": null,
+  "seed_cases": null,
+  "semantic_properties": [
+    {
+      "description": "A successful response reports that the caller follows the profile.",
+      "expression": {
+        "kind": "binary_op",
+        "left": {
+          "field": "profile.following",
+          "kind": "field_ref"
+        },
+        "operator": "==",
+        "right": {
+          "kind": "literal",
+          "value": true
+        }
+      },
+      "grounds": {
+        "basis": "stated",
+        "quote": "err = myUserModel.following(userModel)"
+      },
+      "id": "followed-profile-is-following",
+      "property_class": "response_invariant"
+    }
+  ],
   "transitions": null
 }

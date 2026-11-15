@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "\"description\": \"Create an article. Auth is required\","
+    },
     "owner_bundle": null,
     "policy": "authenticated",
     "required_role": null
@@ -11,6 +15,7 @@
     "enum": null,
     "examples": null,
     "format": null,
+    "grounds": null,
     "items": null,
     "maxItems": null,
     "maxLength": null,
@@ -26,6 +31,7 @@
         "enum": null,
         "examples": null,
         "format": null,
+        "grounds": null,
         "items": null,
         "maxItems": null,
         "maxLength": null,
@@ -41,6 +47,16 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Body        string   `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Body        string   `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 2048,
@@ -59,6 +75,16 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Description string   `form:\"description\" json:\"description\" binding:\"required,max=2048\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Description string   `form:\"description\" json:\"description\" binding:\"required,max=2048\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 2048,
@@ -71,12 +97,39 @@
             "required": null,
             "type": "string"
           },
+          "tagList": {
+            "default": null,
+            "description": null,
+            "enum": null,
+            "examples": [
+              []
+            ],
+            "format": null,
+            "grounds": null,
+            "items": null,
+            "maxItems": null,
+            "maxLength": null,
+            "maximum": null,
+            "minItems": null,
+            "minLength": null,
+            "minimum": null,
+            "pattern": null,
+            "properties": null,
+            "required": null,
+            "type": "array"
+          },
           "title": {
             "default": null,
             "description": null,
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "minLength": {
+                "basis": "stated",
+                "quote": "Title       string   `form:\"title\" json:\"title\" binding:\"required,min=4\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": null,
@@ -90,17 +143,11 @@
             "type": "string"
           }
         },
-        "required": [
-          "title",
-          "description",
-          "body"
-        ],
+        "required": null,
         "type": "object"
       }
     },
-    "required": [
-      "article"
-    ],
+    "required": null,
     "type": "object"
   },
   "method": "post",
@@ -123,6 +170,103 @@
     "sensitivity": "internal",
     "write_operation": true
   },
+  "seed_cases": [
+    {
+      "description": "Title one character below the minimum length.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Title       string   `form:\"title\" json:\"title\" binding:\"required,min=4\"`"
+      },
+      "id": "title-below-minimum",
+      "values": {
+        "article.title": "abc"
+      }
+    },
+    {
+      "description": "Title exactly at the minimum length.",
+      "expects": null,
+      "grounds": null,
+      "id": "title-at-minimum",
+      "values": {
+        "article.title": "abcd"
+      }
+    },
+    {
+      "description": "Title one character above the minimum length.",
+      "expects": null,
+      "grounds": null,
+      "id": "title-above-minimum",
+      "values": {
+        "article.title": "abcde"
+      }
+    },
+    {
+      "description": "An empty required description.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Description string   `form:\"description\" json:\"description\" binding:\"required,max=2048\"`"
+      },
+      "id": "empty-description",
+      "values": {
+        "article.description": ""
+      }
+    },
+    {
+      "description": "An empty required article body.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Body        string   `form:\"body\" json:\"body\" binding:\"required,max=2048\"`"
+      },
+      "id": "empty-body",
+      "values": {
+        "article.body": ""
+      }
+    },
+    {
+      "description": "Exercise the empty tag-list branch.",
+      "expects": null,
+      "grounds": null,
+      "id": "empty-tags",
+      "values": {
+        "article.tagList": []
+      }
+    },
+    {
+      "description": "Exercise repeated tag creation and lookup.",
+      "expects": null,
+      "grounds": null,
+      "id": "duplicate-tags",
+      "values": {
+        "article.tagList": [
+          "testing",
+          "testing"
+        ]
+      }
+    },
+    {
+      "description": "Exercise tag creation with an empty tag.",
+      "expects": null,
+      "grounds": null,
+      "id": "empty-tag",
+      "values": {
+        "article.tagList": [
+          ""
+        ]
+      }
+    },
+    {
+      "description": "Exercise slug generation from a punctuation-only title.",
+      "expects": null,
+      "grounds": null,
+      "id": "punctuation-title",
+      "values": {
+        "article.title": "!!!!"
+      }
+    }
+  ],
   "semantic_properties": null,
   "transitions": null
 }

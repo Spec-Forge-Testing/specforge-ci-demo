@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "\"description\": \"Get a profile of a user of the system. Auth is optional\","
+    },
     "owner_bundle": null,
     "policy": "public",
     "required_role": null
@@ -23,9 +27,10 @@
     "criticality": "low",
     "external_side_effects": false,
     "risk_score": 35,
-    "sensitivity": "pii",
+    "sensitivity": "public",
     "write_operation": false
   },
+  "seed_cases": null,
   "semantic_properties": null,
   "transitions": null
 }

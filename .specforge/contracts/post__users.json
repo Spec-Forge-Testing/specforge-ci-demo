@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "  \"security\": null,"
+    },
     "owner_bundle": null,
     "policy": "public",
     "required_role": null
@@ -11,6 +15,7 @@
     "enum": null,
     "examples": null,
     "format": null,
+    "grounds": null,
     "items": null,
     "maxItems": null,
     "maxLength": null,
@@ -26,6 +31,7 @@
         "enum": null,
         "examples": null,
         "format": null,
+        "grounds": null,
         "items": null,
         "maxItems": null,
         "maxLength": null,
@@ -41,6 +47,12 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Bio      string `form:\"bio\" json:\"bio\" binding:\"max=1024\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 1024,
@@ -57,8 +69,20 @@
             "default": null,
             "description": null,
             "enum": null,
-            "examples": null,
+            "examples": [
+              "person@example.com"
+            ],
             "format": "email",
+            "grounds": {
+              "format": {
+                "basis": "stated",
+                "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": null,
@@ -75,8 +99,16 @@
             "default": null,
             "description": null,
             "enum": null,
-            "examples": null,
+            "examples": [
+              "https://example.com/image.png"
+            ],
             "format": "uri",
+            "grounds": {
+              "format": {
+                "basis": "stated",
+                "quote": "Image    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": null,
@@ -95,6 +127,16 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 255,
@@ -113,6 +155,16 @@
             "enum": null,
             "examples": null,
             "format": null,
+            "grounds": {
+              "maxLength": {
+                "basis": "stated",
+                "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+              },
+              "minLength": {
+                "basis": "stated",
+                "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+              }
+            },
             "items": null,
             "maxItems": null,
             "maxLength": 255,
@@ -126,17 +178,11 @@
             "type": "string"
           }
         },
-        "required": [
-          "username",
-          "email",
-          "password"
-        ],
+        "required": null,
         "type": "object"
       }
     },
-    "required": [
-      "user"
-    ],
+    "required": null,
     "type": "object"
   },
   "method": "post",
@@ -159,6 +205,176 @@
     "sensitivity": "auth",
     "write_operation": true
   },
+  "seed_cases": [
+    {
+      "description": "A three-character username is below the minimum.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+      },
+      "id": "username-below-minimum",
+      "values": {
+        "user.username": "abc"
+      }
+    },
+    {
+      "description": "A four-character username is at the minimum.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+      },
+      "id": "username-at-minimum",
+      "values": {
+        "user.username": "abcd"
+      }
+    },
+    {
+      "description": "A five-character username is just above the minimum.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+      },
+      "id": "username-above-minimum",
+      "values": {
+        "user.username": "abcde"
+      }
+    },
+    {
+      "description": "A seven-character password is below the minimum.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+      },
+      "id": "password-below-minimum",
+      "values": {
+        "user.password": "1234567"
+      }
+    },
+    {
+      "description": "An eight-character password is at the minimum.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+      },
+      "id": "password-at-minimum",
+      "values": {
+        "user.password": "12345678"
+      }
+    },
+    {
+      "description": "A nine-character password is just above the minimum.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+      },
+      "id": "password-above-minimum",
+      "values": {
+        "user.password": "123456789"
+      }
+    },
+    {
+      "description": "A password just below bcrypt's byte limit.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-71-bytes",
+      "values": {
+        "user.password": "01234567890123456789012345678901234567890123456789012345678901234567891"
+      }
+    },
+    {
+      "description": "A password at bcrypt's byte limit.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-72-bytes",
+      "values": {
+        "user.password": "012345678901234567890123456789012345678901234567890123456789012345678912"
+      }
+    },
+    {
+      "description": "A password above bcrypt's byte limit exercises the ignored hashing error.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-73-bytes",
+      "values": {
+        "user.password": "0123456789012345678901234567890123456789012345678901234567890123456789123"
+      }
+    },
+    {
+      "description": "A password within the character limit exceeds bcrypt's byte limit.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-multibyte-over-bcrypt-limit",
+      "values": {
+        "user.password": "éééééééééééééééééééééééééééééééééééééééé"
+      }
+    },
+    {
+      "description": "An empty required email is rejected.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+      },
+      "id": "empty-email",
+      "values": {
+        "user.email": ""
+      }
+    },
+    {
+      "description": "A non-email string is rejected.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+      },
+      "id": "invalid-email",
+      "values": {
+        "user.email": "not-an-email"
+      }
+    },
+    {
+      "description": "An empty optional image exercises the branch that leaves the image unset.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Image    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
+      },
+      "id": "empty-image",
+      "values": {
+        "user.image": ""
+      }
+    },
+    {
+      "description": "A nonempty malformed image URL is rejected.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Image    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
+      },
+      "id": "invalid-image-url",
+      "values": {
+        "user.image": "not a url"
+      }
+    },
+    {
+      "description": "A nonempty URL exercises the branch that stores an image.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "Image    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
+      },
+      "id": "valid-image-url",
+      "values": {
+        "user.image": "https://example.com/image.png"
+      }
+    }
+  ],
   "semantic_properties": null,
   "transitions": null
 }

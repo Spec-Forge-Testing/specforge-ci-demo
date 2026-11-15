@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "  \"description\": \"Get tags. Auth not required\","
+    },
     "owner_bundle": null,
     "policy": "public",
     "required_role": null
@@ -26,6 +30,7 @@
     "sensitivity": "public",
     "write_operation": false
   },
+  "seed_cases": null,
   "semantic_properties": null,
   "transitions": null
 }

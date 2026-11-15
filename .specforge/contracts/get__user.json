@@ -1,5 +1,9 @@
 {
   "access": {
+    "grounds": {
+      "basis": "stated",
+      "quote": "    \"requirement\": \"required\""
+    },
     "owner_bundle": null,
     "policy": "authenticated",
     "required_role": null
@@ -26,6 +30,7 @@
     "sensitivity": "auth",
     "write_operation": false
   },
+  "seed_cases": null,
   "semantic_properties": null,
   "transitions": null
 }
