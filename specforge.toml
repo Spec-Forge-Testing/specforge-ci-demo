@@ -10,3 +10,10 @@ base_url = "http://localhost:8000"
 
 [replay]
 source_root = "/src"
+
+[ci]
+base_url = "http://localhost:8000"
+# Creates the users the fuzz acts as once the API answers, with SPECFORGE_BASE_URL
+# set, and must write identities.toml at the project's root. Example to adapt:
+# https://github.com/Spec-Forge-Testing/specforge-cli/blob/master/docs/ci/identities_example.py
+identities_command = 'python3 specforge_identities.py "$SPECFORGE_BASE_URL/api"'

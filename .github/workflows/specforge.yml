@@ -1,26 +1,21 @@
-# SpecForge on RealWorld Go: start the API, write its identities and fail only on a defect
-# .specforge/baseline.json does not accept.
-#
-# The image is private while SpecForge is not published: this repository reads it with its own
-# GITHUB_TOKEN once the package grants it read access (Package settings > Manage Actions access).
-# The OPENAI_API_KEY secret is the model's key; LLM_MODEL is the model the committed contracts
-# were inferred with.
+# SpecForge: fuzz the API this job starts and fail only on a defect the committed baseline does
+# not accept. Written by `specforge ci init`; adapt the steps marked ADAPT. The model's key is
+# optional: without it, committed contracts are still used and an endpoint without one is fuzzed
+# from its schema. Set LLM_MODEL to the model the committed contracts were inferred with.
 name: specforge
 
 on:
   push:
-    branches: [main]
   pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read
   packages: read
 
 env:
+  # ADAPTED: the image of the CLI under test, private while SpecForge is not published.
+  IMAGE: ghcr.io/spec-forge-testing/specforge:ci-v4
   COMPOSE_FILE: gin/compose.specforge.yml
-  IMAGE: ghcr.io/spec-forge-testing/specforge:ci-v2
-  API_URL: http://localhost:8000/api
 
 jobs:
   specforge:
@@ -29,24 +24,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # ADAPTED: this repository reads the private image with its own GITHUB_TOKEN once the
+      # package grants it read access (Package settings > Manage Actions access).
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
+      # ADAPT: start your API with an empty database, published on localhost. `ci` waits
+      # for it to answer.
       - name: Start the API
-        run: |
-          docker compose up -d --build
-          for _ in $(seq 1 120); do
-            curl --silent --output /dev/null "$API_URL/tags" && exit 0
-            sleep 1
-          done
-          docker compose logs
-          exit 1
+        run: docker compose up -d --build
 
-      - name: Create identities
-        run: python3 specforge_identities.py "$API_URL"
+      # Contracts earlier jobs inferred and the repository does not have yet.
+      - name: Restore the contract cache
+        uses: actions/cache@v4
+        with:
+          path: .specforge-cache
+          key: specforge-contracts-${{ github.sha }}
+          restore-keys: specforge-contracts-
 
-      # As the runner's user, so the files it writes stay the job's; HOME is where the core keeps
-      # its own data, which nobody reads after the job.
+      # ADAPT: the model's key, if you have one, as a secret, and the model the committed
+      # contracts were inferred with.
       - name: SpecForge
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

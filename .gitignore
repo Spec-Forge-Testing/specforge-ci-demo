@@ -3,3 +3,4 @@ identities.toml
 # What a SpecForge run leaves: the job's report and the fuzzer's own cache.
 specforge-out/
 .hypothesis/
+.specforge-cache/
