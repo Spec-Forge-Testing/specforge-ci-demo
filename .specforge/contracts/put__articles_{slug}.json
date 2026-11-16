@@ -15,7 +15,12 @@
     "enum": null,
     "examples": null,
     "format": null,
-    "grounds": null,
+    "grounds": {
+      "required": {
+        "basis": "stated",
+        "quote": "articleModelValidator := NewArticleModelValidatorFillWith(articleModel)"
+      }
+    },
     "items": null,
     "maxItems": null,
     "maxLength": null,
@@ -97,13 +102,32 @@
             "required": null,
             "type": "string"
           },
-          "title": {
+          "tagList": {
             "default": null,
             "description": null,
             "enum": null,
             "examples": [
-              "Test"
+              []
             ],
+            "format": null,
+            "grounds": null,
+            "items": null,
+            "maxItems": null,
+            "maxLength": null,
+            "maximum": null,
+            "minItems": null,
+            "minLength": null,
+            "minimum": null,
+            "pattern": null,
+            "properties": null,
+            "required": null,
+            "type": "array"
+          },
+          "title": {
+            "default": null,
+            "description": null,
+            "enum": null,
+            "examples": null,
             "format": null,
             "grounds": {
               "minLength": {
@@ -128,7 +152,7 @@
         "type": "object"
       }
     },
-    "required": null,
+    "required": [],
     "type": "object"
   },
   "method": "put",
@@ -148,12 +172,12 @@
     "criticality": "high",
     "external_side_effects": false,
     "risk_score": 70,
-    "sensitivity": "internal",
+    "sensitivity": "public",
     "write_operation": true
   },
   "seed_cases": [
     {
-      "description": "Title one character below the minimum length.",
+      "description": "A title one character below the minimum length.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
@@ -165,7 +189,7 @@
       }
     },
     {
-      "description": "Title at the minimum length.",
+      "description": "A title at the minimum length.",
       "expects": "accepted",
       "grounds": {
         "basis": "stated",
@@ -173,11 +197,11 @@
       },
       "id": "title-at-minimum",
       "values": {
-        "article.title": "Test"
+        "article.title": "abcd"
       }
     },
     {
-      "description": "Title one character above the minimum length.",
+      "description": "A title one character above the minimum length.",
       "expects": "accepted",
       "grounds": {
         "basis": "stated",
@@ -185,20 +209,20 @@
       },
       "id": "title-above-minimum",
       "values": {
-        "article.title": "Tests"
+        "article.title": "abcde"
       }
     },
     {
-      "description": "Valid-length title that may produce an empty slug.",
+      "description": "A valid-length title that may produce an empty slug.",
       "expects": null,
       "grounds": null,
-      "id": "title-without-slug-characters",
+      "id": "punctuation-only-title",
       "values": {
         "article.title": "!!!!"
       }
     },
     {
-      "description": "Explicitly clear the required description.",
+      "description": "An explicitly empty description.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
@@ -210,7 +234,7 @@
       }
     },
     {
-      "description": "Description at its minimum length.",
+      "description": "A description at the minimum length.",
       "expects": "accepted",
       "grounds": {
         "basis": "stated",
@@ -222,7 +246,7 @@
       }
     },
     {
-      "description": "Explicitly clear the required article body.",
+      "description": "An explicitly empty article body.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
@@ -234,7 +258,7 @@
       }
     },
     {
-      "description": "Article body at its minimum length.",
+      "description": "An article body at the minimum length.",
       "expects": "accepted",
       "grounds": {
         "basis": "stated",
@@ -246,38 +270,38 @@
       }
     },
     {
-      "description": "Set the tag list to empty.",
+      "description": "An explicit empty tag list.",
       "expects": "accepted",
       "grounds": {
         "basis": "stated",
         "quote": "if len(tags) == 0 {"
       },
-      "id": "clear-tags",
+      "id": "empty-tags",
       "values": {
         "article.tagList": []
       }
     },
     {
-      "description": "Supply the same tag twice.",
+      "description": "Repeated tags exercise lookup and creation handling.",
       "expects": null,
       "grounds": null,
       "id": "duplicate-tags",
       "values": {
         "article.tagList": [
-          "testing",
-          "testing"
+          "example",
+          "example"
         ]
       }
     },
     {
-      "description": "Supply tags in reverse alphabetical order.",
+      "description": "Tags in reverse order exercise response sorting.",
       "expects": null,
       "grounds": null,
-      "id": "multiple-tags",
+      "id": "unsorted-tags",
       "values": {
         "article.tagList": [
-          "testing",
-          "articles"
+          "zebra",
+          "apple"
         ]
       }
     }

@@ -2,7 +2,7 @@
   "access": {
     "grounds": {
       "basis": "stated",
-      "quote": "  \"description\": \"Get the comments for an article. Auth is optional\","
+      "quote": "\"description\": \"Get the comments for an article. Auth is optional\","
     },
     "owner_bundle": null,
     "policy": "public",
@@ -12,9 +12,49 @@
   "body": null,
   "method": "get",
   "parameters": {
-    "header": {},
+    "header": {
+      "Authorization": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": null,
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      }
+    },
     "path": {},
-    "query": {}
+    "query": {
+      "access_token": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": null,
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      }
+    }
   },
   "path_url": "/articles/{slug}/comments",
   "required_parameters": {
@@ -23,10 +63,10 @@
     "query": []
   },
   "risk": {
-    "auth_surface": false,
+    "auth_surface": true,
     "criticality": "low",
     "external_side_effects": false,
-    "risk_score": 25,
+    "risk_score": 35,
     "sensitivity": "pii",
     "write_operation": false
   },

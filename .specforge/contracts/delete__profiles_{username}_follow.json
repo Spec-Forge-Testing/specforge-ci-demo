@@ -2,7 +2,7 @@
   "access": {
     "grounds": {
       "basis": "stated",
-      "quote": "The document declares that this endpoint requires authentication, with one of:"
+      "quote": "\"requirement\": \"required\""
     },
     "owner_bundle": null,
     "policy": "authenticated",
@@ -48,9 +48,9 @@
       },
       "grounds": {
         "basis": "stated",
-        "quote": "\terr := db.Where(\"following_id = ? AND followed_by_id = ?\", v.ID, u.ID).Delete(&FollowModel{}).Error"
+        "quote": "err := db.Where(\"following_id = ? AND followed_by_id = ?\", v.ID, u.ID).Delete(&FollowModel{}).Error"
       },
-      "id": "profile-not-following",
+      "id": "profile-no-longer-followed",
       "property_class": "response_invariant"
     }
   ],

@@ -2,7 +2,7 @@
   "access": {
     "grounds": {
       "basis": "stated",
-      "quote": "    \"requirement\": \"required\""
+      "quote": "\"requirement\": \"required\""
     },
     "owner_bundle": null,
     "policy": "authenticated",
@@ -12,9 +12,49 @@
   "body": null,
   "method": "get",
   "parameters": {
-    "header": {},
+    "header": {
+      "Authorization": {
+        "default": null,
+        "description": "Token credential with a case-insensitive TOKEN prefix.",
+        "enum": null,
+        "examples": null,
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      }
+    },
     "path": {},
-    "query": {}
+    "query": {
+      "access_token": {
+        "default": null,
+        "description": "Token used when the Authorization header does not contain a Token credential.",
+        "enum": null,
+        "examples": null,
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      }
+    }
   },
   "path_url": "/user",
   "required_parameters": {

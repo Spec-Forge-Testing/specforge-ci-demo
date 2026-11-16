@@ -2,7 +2,7 @@
   "access": {
     "grounds": {
       "basis": "stated",
-      "quote": "\"requirement\": \"required\""
+      "quote": "The document declares that this endpoint requires authentication, with one of:"
     },
     "owner_bundle": null,
     "policy": "authenticated",
@@ -45,12 +45,14 @@
             "default": null,
             "description": null,
             "enum": null,
-            "examples": null,
+            "examples": [
+              ""
+            ],
             "format": null,
             "grounds": {
               "maxLength": {
                 "basis": "stated",
-                "quote": "Bio      string `form:\"bio\" json:\"bio\" binding:\"max=1024\"`"
+                "quote": "\t\tBio      string `form:\"bio\" json:\"bio\" binding:\"max=1024\"`"
               }
             },
             "items": null,
@@ -63,22 +65,24 @@
             "pattern": null,
             "properties": null,
             "required": null,
-            "type": "string"
+            "type": null
           },
           "email": {
             "default": null,
             "description": null,
             "enum": null,
-            "examples": null,
+            "examples": [
+              "test@example.com"
+            ],
             "format": "email",
             "grounds": {
               "format": {
                 "basis": "stated",
-                "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+                "quote": "\t\tEmail    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
               },
               "minLength": {
                 "basis": "stated",
-                "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+                "quote": "\t\tEmail    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
               }
             },
             "items": null,
@@ -95,14 +99,16 @@
           },
           "image": {
             "default": null,
-            "description": null,
+            "description": "An empty string skips the image update.",
             "enum": null,
-            "examples": null,
+            "examples": [
+              "https://example.com/image.png"
+            ],
             "format": "uri",
             "grounds": {
               "format": {
                 "basis": "stated",
-                "quote": "Image    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
+                "quote": "\t\tImage    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
               }
             },
             "items": null,
@@ -115,7 +121,7 @@
             "pattern": null,
             "properties": null,
             "required": null,
-            "type": "string"
+            "type": null
           },
           "password": {
             "default": null,
@@ -126,11 +132,11 @@
             "grounds": {
               "maxLength": {
                 "basis": "stated",
-                "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+                "quote": "\t\tPassword string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
               },
               "minLength": {
                 "basis": "stated",
-                "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+                "quote": "\t\tPassword string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
               }
             },
             "items": null,
@@ -149,16 +155,19 @@
             "default": null,
             "description": null,
             "enum": null,
-            "examples": null,
+            "examples": [
+              "user",
+              "users"
+            ],
             "format": null,
             "grounds": {
               "maxLength": {
                 "basis": "stated",
-                "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+                "quote": "\t\tUsername string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
               },
               "minLength": {
                 "basis": "stated",
-                "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+                "quote": "\t\tUsername string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
               }
             },
             "items": null,
@@ -203,113 +212,53 @@
   },
   "seed_cases": [
     {
-      "description": "Username one character below the minimum.",
+      "description": "An update containing no user fields.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
-        "quote": "Username string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+        "quote": "    \"description\": \"User details to update. At least **one** field is required.\","
       },
-      "id": "username-below-minimum",
+      "id": "empty-update",
       "values": {
-        "user.username": "abc"
+        "user": {}
       }
     },
     {
-      "description": "Username at the minimum length.",
+      "description": "A three-character username.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\t\tUsername string `form:\"username\" json:\"username\" binding:\"required,min=4,max=255\"`"
+      },
+      "id": "username-below-minimum",
+      "values": {
+        "user.username": "usr"
+      }
+    },
+    {
+      "description": "A four-character username.",
       "expects": null,
       "grounds": null,
       "id": "username-at-minimum",
       "values": {
-        "user.username": "abcd"
+        "user.username": "user"
       }
     },
     {
-      "description": "Username one character above the minimum.",
+      "description": "A five-character username.",
       "expects": null,
       "grounds": null,
       "id": "username-above-minimum",
       "values": {
-        "user.username": "abcde"
+        "user.username": "users"
       }
     },
     {
-      "description": "Explicitly set an empty password.",
+      "description": "An explicitly empty email.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
-        "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
-      },
-      "id": "empty-password",
-      "values": {
-        "user.password": ""
-      }
-    },
-    {
-      "description": "Password one character below the minimum.",
-      "expects": "rejected",
-      "grounds": {
-        "basis": "stated",
-        "quote": "Password string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
-      },
-      "id": "password-below-minimum",
-      "values": {
-        "user.password": "abcdefg"
-      }
-    },
-    {
-      "description": "Password at the minimum length.",
-      "expects": null,
-      "grounds": null,
-      "id": "password-at-minimum",
-      "values": {
-        "user.password": "abcdefgh"
-      }
-    },
-    {
-      "description": "Password one character above the minimum.",
-      "expects": null,
-      "grounds": null,
-      "id": "password-above-minimum",
-      "values": {
-        "user.password": "abcdefghi"
-      }
-    },
-    {
-      "description": "Password at bcrypt's 72-byte input limit.",
-      "expects": null,
-      "grounds": null,
-      "id": "password-at-bcrypt-limit",
-      "values": {
-        "user.password": "abcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefgh"
-      }
-    },
-    {
-      "description": "Password beyond bcrypt's input limit, whose hashing error is ignored.",
-      "expects": null,
-      "grounds": null,
-      "id": "password-over-bcrypt-limit",
-      "values": {
-        "user.password": "abcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghabcdefghx"
-      }
-    },
-    {
-      "description": "Email that fails the declared email validator.",
-      "expects": "rejected",
-      "grounds": {
-        "basis": "stated",
-        "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
-      },
-      "id": "invalid-email",
-      "values": {
-        "user.email": "not-an-email"
-      }
-    },
-    {
-      "description": "Explicitly set an empty email.",
-      "expects": "rejected",
-      "grounds": {
-        "basis": "stated",
-        "quote": "Email    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
+        "quote": "\t\tEmail    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
       },
       "id": "empty-email",
       "values": {
@@ -317,45 +266,114 @@
       }
     },
     {
-      "description": "Image value that is not a URL.",
+      "description": "An email without an address domain.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
-        "quote": "Image    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
+        "quote": "\t\tEmail    string `form:\"email\" json:\"email\" binding:\"required,email\"`"
       },
-      "id": "invalid-image-url",
+      "id": "invalid-email",
       "values": {
-        "user.image": "not-a-url"
+        "user.email": "not-an-email"
       }
     },
     {
-      "description": "Attempt to clear the image with an empty string.",
-      "expects": null,
-      "grounds": null,
-      "id": "empty-image",
+      "description": "An explicitly empty password.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\t\tPassword string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+      },
+      "id": "empty-password",
       "values": {
-        "user.image": ""
+        "user.password": ""
       }
     },
     {
-      "description": "Attempt to clear the bio with an empty string.",
+      "description": "A seven-character password.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\t\tPassword string `form:\"password\" json:\"password\" binding:\"required,min=8,max=255\"`"
+      },
+      "id": "password-below-minimum",
+      "values": {
+        "user.password": "1234567"
+      }
+    },
+    {
+      "description": "An eight-character password.",
       "expects": null,
       "grounds": null,
-      "id": "empty-bio",
+      "id": "password-at-minimum",
+      "values": {
+        "user.password": "12345678"
+      }
+    },
+    {
+      "description": "A nine-character password.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-above-minimum",
+      "values": {
+        "user.password": "123456789"
+      }
+    },
+    {
+      "description": "A 72-byte password at bcrypt's input limit.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-bcrypt-byte-limit",
+      "values": {
+        "user.password": "123456781234567812345678123456781234567812345678123456781234567812345678"
+      }
+    },
+    {
+      "description": "A 73-byte password whose bcrypt error is ignored.",
+      "expects": null,
+      "grounds": null,
+      "id": "password-over-bcrypt-byte-limit",
+      "values": {
+        "user.password": "1234567812345678123456781234567812345678123456781234567812345678123456781"
+      }
+    },
+    {
+      "description": "A short character count exceeding bcrypt's byte limit.",
+      "expects": null,
+      "grounds": null,
+      "id": "multibyte-password-over-bcrypt-limit",
+      "values": {
+        "user.password": "éééééééééééééééééééééééééééééééééééééééé"
+      }
+    },
+    {
+      "description": "An empty bio passed to a zero-value-skipping update.",
+      "expects": null,
+      "grounds": null,
+      "id": "clear-bio",
       "values": {
         "user.bio": ""
       }
     },
     {
-      "description": "Send an update with no user fields despite the at-least-one-field requirement.",
+      "description": "An empty image explicitly skips assigning an image.",
+      "expects": null,
+      "grounds": null,
+      "id": "clear-image",
+      "values": {
+        "user.image": ""
+      }
+    },
+    {
+      "description": "A nonempty image value that is not a URL.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
-        "quote": "\"description\": \"User details to update. At least **one** field is required.\","
+        "quote": "\t\tImage    string `form:\"image\" json:\"image\" binding:\"omitempty,url\"`"
       },
-      "id": "empty-update",
+      "id": "invalid-image-url",
       "values": {
-        "user": {}
+        "user.image": "not-a-url"
       }
     }
   ],

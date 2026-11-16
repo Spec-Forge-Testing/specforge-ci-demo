@@ -15,6 +15,25 @@
     "header": {},
     "path": {},
     "query": {
+      "access_token": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": null,
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      },
       "limit": {
         "default": null,
         "description": null,
@@ -72,13 +91,13 @@
     "auth_surface": true,
     "criticality": "medium",
     "external_side_effects": false,
-    "risk_score": 45,
-    "sensitivity": "internal",
+    "risk_score": 48,
+    "sensitivity": "pii",
     "write_operation": true
   },
   "seed_cases": [
     {
-      "description": "Try a zero page size.",
+      "description": "Zero limit is below the documented minimum.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
@@ -90,72 +109,128 @@
       }
     },
     {
-      "description": "Try the minimum page size.",
-      "expects": null,
-      "grounds": null,
+      "description": "A negative limit may remove the database limit.",
+      "expects": "rejected",
+      "grounds": {
+        "basis": "stated",
+        "quote": "\"minimum\": 1,"
+      },
+      "id": "negative-limit",
+      "values": {
+        "limit": -1
+      }
+    },
+    {
+      "description": "Request one article.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "c.JSON(http.StatusOK, gin.H{\"articles\": serializer.Response(), \"articlesCount\": modelCount})"
+      },
       "id": "limit-at-minimum",
       "values": {
         "limit": 1
       }
     },
     {
-      "description": "Try a page size just above the minimum.",
-      "expects": null,
-      "grounds": null,
+      "description": "Request two articles.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "c.JSON(http.StatusOK, gin.H{\"articles\": serializer.Response(), \"articlesCount\": modelCount})"
+      },
       "id": "limit-above-minimum",
       "values": {
         "limit": 2
       }
     },
     {
-      "description": "Try a negative offset.",
+      "description": "A negative offset is below the documented minimum.",
       "expects": "rejected",
       "grounds": {
         "basis": "stated",
         "quote": "\"minimum\": 0,"
       },
-      "id": "offset-below-minimum",
+      "id": "negative-offset",
       "values": {
         "offset": -1
       }
     },
     {
-      "description": "Try the minimum offset.",
-      "expects": null,
-      "grounds": null,
+      "description": "Start at the first article.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "c.JSON(http.StatusOK, gin.H{\"articles\": serializer.Response(), \"articlesCount\": modelCount})"
+      },
       "id": "offset-at-minimum",
       "values": {
         "offset": 0
       }
     },
     {
-      "description": "Try an offset just above the minimum.",
-      "expects": null,
-      "grounds": null,
+      "description": "Skip one article.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "c.JSON(http.StatusOK, gin.H{\"articles\": serializer.Response(), \"articlesCount\": modelCount})"
+      },
       "id": "offset-above-minimum",
       "values": {
         "offset": 1
       }
     },
     {
-      "description": "Try a page size that overflows Go's integer conversion.",
-      "expects": null,
-      "grounds": null,
+      "description": "A limit beyond a signed 64-bit integer exercises conversion fallback.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "limit_int = 20"
+      },
       "id": "limit-integer-overflow",
       "values": {
         "limit": 9223372036854775808
       }
     },
     {
-      "description": "Try an offset that overflows Go's integer conversion.",
-      "expects": null,
-      "grounds": null,
+      "description": "An offset beyond a signed 64-bit integer exercises conversion fallback.",
+      "expects": "accepted",
+      "grounds": {
+        "basis": "stated",
+        "quote": "offset_int = 0"
+      },
       "id": "offset-integer-overflow",
       "values": {
         "offset": 9223372036854775808
       }
     }
   ],
-  "semantic_properties": null,
+  "semantic_properties": [
+    {
+      "description": "The total article count is at least the number of returned articles.",
+      "expression": {
+        "kind": "binary_op",
+        "left": {
+          "field": "articlesCount",
+          "kind": "field_ref"
+        },
+        "operator": ">=",
+        "right": {
+          "function": "length",
+          "kind": "aggregation",
+          "over": {
+            "field": "articles",
+            "kind": "field_ref"
+          }
+        }
+      },
+      "grounds": {
+        "basis": "stated",
+        "quote": "tx.Model(&ArticleModel{}).Where(\"author_id IN ?\", authorIDs).Count(&count64)"
+      },
+      "id": "count-covers-returned-articles",
+      "property_class": "response_invariant"
+    }
+  ],
   "transitions": null
 }

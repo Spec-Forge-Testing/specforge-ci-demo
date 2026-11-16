@@ -12,9 +12,49 @@
   "body": null,
   "method": "get",
   "parameters": {
-    "header": {},
+    "header": {
+      "Authorization": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": null,
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      }
+    },
     "path": {},
-    "query": {}
+    "query": {
+      "access_token": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": null,
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      }
+    }
   },
   "path_url": "/profiles/{username}",
   "required_parameters": {
@@ -23,11 +63,11 @@
     "query": []
   },
   "risk": {
-    "auth_surface": false,
-    "criticality": "low",
+    "auth_surface": true,
+    "criticality": "medium",
     "external_side_effects": false,
-    "risk_score": 35,
-    "sensitivity": "public",
+    "risk_score": 45,
+    "sensitivity": "auth",
     "write_operation": false
   },
   "seed_cases": null,

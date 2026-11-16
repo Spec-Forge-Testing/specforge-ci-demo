@@ -2,7 +2,7 @@
   "access": {
     "grounds": {
       "basis": "stated",
-      "quote": "c.JSON(http.StatusForbidden, common.NewError(\"article\", errors.New(\"you are not the author\")))"
+      "quote": "if articleModel.AuthorID != articleUserModel.ID {"
     },
     "owner_bundle": "articles_slug",
     "policy": "owner_only",

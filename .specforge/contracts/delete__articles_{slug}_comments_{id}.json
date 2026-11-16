@@ -2,7 +2,7 @@
   "access": {
     "grounds": {
       "basis": "stated",
-      "quote": "\t\tif commentModel.AuthorID != articleUserModel.ID {"
+      "quote": "c.JSON(http.StatusForbidden, common.NewError(\"comment\", errors.New(\"you are not the author\")))"
     },
     "owner_bundle": "articles_comments_id",
     "policy": "owner_only",
@@ -23,11 +23,11 @@
         "grounds": {
           "maximum": {
             "basis": "stated",
-            "quote": "\tid64, err := strconv.ParseUint(c.Param(\"id\"), 10, 32)"
+            "quote": "id64, err := strconv.ParseUint(c.Param(\"id\"), 10, 32)"
           },
           "minimum": {
             "basis": "stated",
-            "quote": "\tid64, err := strconv.ParseUint(c.Param(\"id\"), 10, 32)"
+            "quote": "id64, err := strconv.ParseUint(c.Param(\"id\"), 10, 32)"
           }
         },
         "items": null,
@@ -43,14 +43,32 @@
         "type": "integer"
       }
     },
-    "query": {}
+    "query": {
+      "access_token": {
+        "default": null,
+        "description": null,
+        "enum": null,
+        "examples": null,
+        "format": null,
+        "grounds": null,
+        "items": null,
+        "maxItems": null,
+        "maxLength": null,
+        "maximum": null,
+        "minItems": null,
+        "minLength": null,
+        "minimum": null,
+        "pattern": null,
+        "properties": null,
+        "required": null,
+        "type": "string"
+      }
+    }
   },
   "path_url": "/articles/{slug}/comments/{id}",
   "required_parameters": {
     "header": [],
-    "path": [
-      "id"
-    ],
+    "path": [],
     "query": []
   },
   "risk": {
