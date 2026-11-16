@@ -451,6 +451,28 @@ paths:
           $ref: '#/components/responses/TagsResponse'
         '422':
           $ref: '#/components/responses/GenericError'
+  /tags/count:
+    get:
+      tags:
+        - Tags
+      summary: Count tags
+      description: How many tags there are. Auth not required
+      operationId: CountTags
+      responses:
+        '200':
+          description: The number of tags
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - count
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+        '422':
+          $ref: '#/components/responses/GenericError'
 components:
   schemas:
     LoginUser:

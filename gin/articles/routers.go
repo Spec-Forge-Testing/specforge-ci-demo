@@ -33,6 +33,7 @@ func ArticlesAnonymousRegister(router *gin.RouterGroup) {
 func TagsAnonymousRegister(router *gin.RouterGroup) {
 	router.GET("", TagList)
 	router.GET("/", TagList)
+	router.GET("/count", TagCount)
 }
 
 func ArticleCreate(c *gin.Context) {
@@ -240,6 +241,15 @@ func ArticleCommentList(c *gin.Context) {
 	serializer := CommentsSerializer{c, articleModel.Comments}
 	c.JSON(http.StatusOK, gin.H{"comments": serializer.Response()})
 }
+func TagCount(c *gin.Context) {
+	tagModels, err := getAllTags()
+	if err != nil {
+		c.JSON(http.StatusNotFound, common.NewError("articles", errors.New("Invalid param")))
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"count": len(tagModels)})
+}
+
 func TagList(c *gin.Context) {
 	tagModels, err := getAllTags()
 	if err != nil {
