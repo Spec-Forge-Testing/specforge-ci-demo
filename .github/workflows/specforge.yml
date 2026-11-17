@@ -14,7 +14,7 @@ permissions:
 
 env:
   # ADAPTED: the image of the CLI under test, private while SpecForge is not published.
-  IMAGE: ghcr.io/spec-forge-testing/specforge:ci-v4
+  IMAGE: ghcr.io/spec-forge-testing/specforge:ci-v4.1
   COMPOSE_FILE: gin/compose.specforge.yml
 
 jobs:
